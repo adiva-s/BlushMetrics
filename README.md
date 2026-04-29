@@ -1,4 +1,4 @@
-# BlushMetrics 💄
+# BlushMetrics 
 
 > *Does the hype match the ratings? A data engineering deep dive into Sephora's review data.*
 
