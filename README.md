@@ -1,86 +1,81 @@
-# BlushMetrics 
+# BlushMetrics
+> *Beauty brand hype vs. reality — tracked in the data.*
 
-> *Does the hype match the ratings? A data engineering deep dive into Sephora's review data.*
+TikTok moves fast. Founders go viral. Products sell out overnight. 
+But when the internet has opinions about a brand — does search 
+interest spike, hold, or collapse? BlushMetrics tracks the signal 
+underneath the noise.
 
-TikTok moves fast. Brands drop products weekly. Influencers review everything. But do the ratings actually back up the buzz — or does the hype die in 3 months?
-
-BlushMetrics is an end-to-end data engineering pipeline analyzing 1M+ Sephora product reviews to answer that question. Built on a full cloud stack with BigQuery, dbt, and Airflow.
+BlushMetrics is a data engineering pipeline tracking Google Trends 
+search interest for 7 beauty brands across distinct hype archetypes. 
+Built with Python, BigQuery, and dbt.
 
 ---
 
-## The analytical questions
+## The Central Question
+When hype hits a beauty brand — a founder controversy, a viral 
+product drop, a cultural moment — what actually happens to search 
+interest? And does it last?
 
-- Which brands consistently back up their hype with real ratings?
-- Which product categories are the most oversaturated?
-- Do newly launched products hold their ratings after the initial buzz fades?
-- Is there a correlation between review volume spikes and rating drops?
+---
+
+## Brand Lineup
+| Brand | Archetype |
+|---|---|
+| Rhode | Celebrity brand / polarizing founder |
+| Rare Beauty | Celebrity brand / sympathy hype |
+| Fenty Beauty | Cultural reset / longevity test |
+| Beauty of Joseon | K-beauty category wave |
+| Drunk Elephant | Generational backlash |
+| Sacheu | Pure TikTok virality |
+| Youthforia | Reputation collapse |
 
 ---
 
 ## Stack
-
 | Layer | Tool |
 |---|---|
+| Data Source | Google Trends via pytrends |
 | Cloud Warehouse | BigQuery (GCP) |
 | Transformation | dbt |
-| Orchestration | Airflow |
-| Ingestion | Python (pandas, SQLAlchemy) |
-| Visualization | Looker Studio |
-| Data Source | Sephora Products & Reviews — Kaggle |
+| Ingestion | Python + pandas |
 
 ---
 
-## Planned architecture
-
+## Pipeline
 ```
-Kaggle Dataset (1M+ rows)
-        ↓
-   Python ingestion
-        ↓
-   BigQuery (raw layer)
-        ↓
-   dbt (staging → mart models)
-        ↓
-   Airflow DAG (scheduled pipeline)
-        ↓
-   Looker Studio dashboard
+Google Trends (pytrends)
+         ↓
+ Python ingestion script
+         ↓
+  BigQuery (raw layer)
+         ↓
+dbt (staging → mart models)
 ```
-
----
-
-## dbt model plan
-
-**Staging layer**
-- `stg_products` — cleaned product catalog with brand, category, price tier
-- `stg_reviews` — cleaned review data with rating, date, verified purchase flag
-
-**Mart layer**
-- `mart_brand_performance` — avg rating, review volume, rating trend over time per brand
-- `mart_category_saturation` — product launch velocity vs avg rating by category
-- `mart_hype_decay` — rating trajectory for products in first 90 days post-launch
-
-**Business metrics**
-- Hype score (review volume spike relative to rating)
-- Rating retention rate (day 0 vs day 90 avg rating)
-- Category saturation index
-
 ---
 
 ## Status
-
 | Phase | Status |
 |---|---|
-| Dataset sourced | ✅ |
-| Schema + ERD designed | 🔄 In progress |
-| BigQuery setup | ⏳ Planned |
-| dbt models | ⏳ Planned |
-| Airflow orchestration | ⏳ Planned |
-| Looker Studio dashboard | ⏳ Planned |
+| Brand lineup finalized | ✅ |
+| pytrends extraction script | ✅ |
+| Raw trends data pulled | ✅ |
+| BigQuery loading | ⏳ |
+| dbt models | ⏳ |
+| README findings | ⏳ |
 
-**Expected completion:** July 2025
+---
+
+## Early Findings
+- Rhode peaked at **100** on 2/15/26 — tied to Caffeine Reset + 
+  Peptide Lip Boost launch
+- Beauty of Joseon peaked at **100** on 4/5/26 — K-beauty 
+  is not a passing trend
+- Youthforia flatlined at **0** the entire year — brand 
+  collapse confirmed in the data
+- Rhode consistently dominates search interest across all 7 brands
 
 ---
 
 ## Why this
-
 I'm a Sephora customer — VIB member, chronically on BeautyTok. I see both sides: brands dropping new products weekly, influencers hyping something different every day. It's easy to get swept up in it. But I started wondering — does the rating actually back up the buzz, or does the hype die in 3 months? That's the question BlushMetrics is built to answer
