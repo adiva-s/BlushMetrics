@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: blushmetrics_raw
+    database: project-4a015a49-6bde-48f1-a3c # This is the project ID of your BigQuery project
+    schema: blushmetrics_raw # This is the dataset in BigQuery where your source tables are located  
+    tables:
+      - name: raw_google_trends
